@@ -15,7 +15,6 @@
         .card-stat { background-color: transparent; border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; transition: 0.3s; }
         .card-stat:hover { background-color: #1e293b; border-color: #4a5568; }
         .text-label { color: #94a3b8; font-size: 13px; font-weight: 600; }
-        /* Todos os números em branco */
         .text-value { font-size: 26px; font-weight: 800; color: #ffffff; }
         .highlight-blue { border: 1px solid #3b82f6 !important; }
         #modal-filtro { background-color: rgba(15, 23, 42, 0.9); }
@@ -24,7 +23,6 @@
         .input-data:focus { border-color: #a3e635; }
         .btn-aplicar { background-color: #a3e635; color: #0f172a; font-weight: 700; padding: 12px; border-radius: 8px; transition: 0.3s; }
         .btn-aplicar:hover { background-color: #bef264; }
-        /* Toast Estilizado */
         #toast { visibility: hidden; min-width: 280px; background-color: #a3e635; color: #0f172a; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 200; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
@@ -56,7 +54,7 @@
                 </button>
                 <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-xl z-50 overflow-hidden shadow-2xl">
                     <button onclick="mudarTab('perfil')" class="flex items-center w-full p-4 text-sm text-slate-300 hover:bg-slate-700">
-                        <i data-lucide="user-circle" class="mr-3 w-4 h-4"></i> Meu Perfil
+                        <i data-lucide="user-circle" class="mr-3 w-4 h-4 text-lime-400"></i> Meu Perfil
                     </button>
                     <button onclick="logout()" class="flex items-center w-full p-4 text-sm text-red-400 hover:bg-slate-700 border-t border-slate-700">
                         <i data-lucide="log-out" class="mr-3 w-4 h-4"></i> Sair
@@ -68,75 +66,46 @@
         <div id="filtros-topo" class="mb-8">
             <button onclick="abrirModalFiltro()" class="flex items-center gap-2 px-4 py-2 bg-transparent border border-slate-700 rounded-md text-slate-400 hover:border-lime-400 transition">
                 <i data-lucide="calendar" class="w-4 h-4 text-lime-400"></i>
-                <span id="periodo-exibicao" class="text-xs font-medium uppercase">01/01/2026 - 31/01/2026</span>
+                <span id="periodo-exibicao" class="text-xs font-medium uppercase">...</span>
             </button>
         </div>
 
         <div id="secao-overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="card-stat">
-                <img src="icones/rgst.svg" class="h-12">
-                <div><p class="text-label uppercase">Registro</p><h3 id="registros" class="text-value">0</h3></div>
-            </div>
-            <div class="card-stat">
-                <img src="icones/FTD-BkwOULkh.svg" class="h-12">
-                <div><p class="text-label uppercase">FTD</p><h3 id="ftd" class="text-value">0</h3></div>
-            </div>
-            <div class="card-stat">
-                <img src="icones/FTD-BkwOULkh.svg" class="h-12">
-                <div><p class="text-label uppercase">QFTD</p><h3 id="qftd" class="text-value">0</h3></div>
-            </div>
-            <div class="card-stat">
-                <img src="icones/deposito-BqL6OVL2.svg" class="h-12">
-                <div><p class="text-label uppercase">Depósito</p><h3 id="depositos" class="text-value">R$ 0,00</h3></div>
-            </div>
-            <div class="card-stat">
-                <img src="icones/Rev-Cd_d35Vr.svg" class="h-12">
-                <div><p class="text-label uppercase">REV</p><h3 class="text-value">R$ 0,00</h3></div>
-            </div>
-            <div class="card-stat">
-                <img src="icones/cpa.svg" class="h-12">
-                <div><p class="text-label uppercase">CPA</p><h3 id="cpa" class="text-value">R$ 0,00</h3></div>
-            </div>
-            <div class="card-stat">
-                <img src="icones/cprev.svg" class="h-12">
-                <div><p class="text-label uppercase">REV + CPA</p><h3 id="total" class="text-value">R$ 0,00</h3></div>
-            </div>
+            <div class="card-stat"><img src="icones/rgst.svg" class="h-12"><div><p class="text-label uppercase">Registro</p><h3 id="registros" class="text-value">0</h3></div></div>
+            <div class="card-stat"><img src="icones/FTD-BkwOULkh.svg" class="h-12"><div><p class="text-label uppercase">FTD</p><h3 id="ftd" class="text-value">0</h3></div></div>
+            <div class="card-stat"><img src="icones/FTD-BkwOULkh.svg" class="h-12"><div><p class="text-label uppercase">QFTD</p><h3 id="qftd" class="text-value">0</h3></div></div>
+            <div class="card-stat"><img src="icones/deposito-BqL6OVL2.svg" class="h-12"><div><p class="text-label uppercase">Depósito</p><h3 id="depositos" class="text-value">R$ 0,00</h3></div></div>
+            <div class="card-stat"><img src="icones/Rev-Cd_d35Vr.svg" class="h-12"><div><p class="text-label uppercase">REV</p><h3 id="rev" class="text-value">R$ 0,00</h3></div></div>
+            <div class="card-stat highlight-blue"><i data-lucide="hand-coins" class="w-10 h-10 text-blue-500"></i><div><p class="text-label text-blue-400 uppercase">CPA</p><h3 id="cpa" class="text-value">R$ 0,00</h3></div></div>
+            <div class="card-stat"><img src="icones/cprev.svg" class="h-12"><div><p class="text-label uppercase">REV + CPA</p><h3 id="total" class="text-value">R$ 0,00</h3></div></div>
         </div>
 
         <div id="secao-perfil" class="hidden max-w-4xl mx-auto">
             <div class="bg-[#1a2235] border border-slate-700 p-10 rounded-2xl text-center">
-                <div id="avatar-perfil-grande" class="h-32 w-32 bg-slate-700 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold border-4 border-slate-600 relative uppercase">
-                    ? <div class="absolute bottom-1 right-1 h-7 w-7 bg-green-500 rounded-full border-4 border-[#1a2235] flex items-center justify-center text-[10px]">✔</div>
-                </div>
+                <div id="avatar-perfil-grande" class="h-32 w-32 bg-slate-700 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold border-4 border-slate-600 relative uppercase">?</div>
                 <h2 class="text-2xl font-bold mb-4 uppercase tracking-tight">NEX AGENCY - <span id="perfil-nome-grande">...</span></h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mt-8">
-                    <div class="card-stat border-slate-800"><i data-lucide="user" class="w-5 h-5 text-lime-400"></i><div><p class="text-slate-500 text-[10px] font-bold uppercase">Nome</p><p class="font-bold">NEX AGENCY -</p></div></div>
-                    <div class="card-stat border-slate-800"><i data-lucide="user" class="w-5 h-5 text-lime-400"></i><div><p class="text-slate-500 text-[10px] font-bold uppercase">Sobrenome</p><p id="perfil-sobrenome" class="font-bold uppercase">...</p></div></div>
-                    <div class="card-stat border-slate-800"><i data-lucide="shield-check" class="w-5 h-5 text-lime-400"></i><div><p class="text-slate-500 text-[10px] font-bold uppercase">Cargo</p><p class="font-bold text-green-400">Afiliado</p></div></div>
-                    <div class="card-stat border-slate-800"><i data-lucide="mail" class="w-5 h-5 text-lime-400"></i><div><p class="text-slate-500 text-[10px] font-bold uppercase">E-mail</p><p class="font-bold text-slate-300">nexagency@affiliates.com</p></div></div>
+                    <div class="card-stat border-slate-800"><i data-lucide="user" class="w-5 h-5 text-lime-400"></i><div><p class="text-label uppercase">Nome</p><p class="font-bold">NEX AGENCY -</p></div></div>
+                    <div class="card-stat border-slate-800"><i data-lucide="user" class="w-5 h-5 text-lime-400"></i><div><p class="text-label uppercase">Sobrenome</p><p id="perfil-sobrenome" class="font-bold uppercase">...</p></div></div>
+                    <div class="card-stat border-slate-800"><i data-lucide="shield-check" class="w-5 h-5 text-lime-400"></i><div><p class="text-label uppercase">Cargo</p><p class="font-bold text-green-400">Afiliado</p></div></div>
+                    <div class="card-stat border-slate-800"><i data-lucide="mail" class="w-5 h-5 text-lime-400"></i><div><p class="text-label uppercase">E-mail</p><p class="font-bold text-slate-300">nexagency@affiliates.com</p></div></div>
                 </div>
             </div>
         </div>
     </main>
 
     <div id="modal-filtro" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="modal-content p-8 rounded-xl relative">
+        <div class="modal-content p-8 rounded-xl relative shadow-2xl">
             <button onclick="fecharModalFiltro()" class="absolute top-4 right-4 text-slate-500 hover:text-white">✕</button>
             <h3 class="text-xl font-bold mb-1">Filtrar por Período</h3>
             <p class="text-slate-400 text-sm mb-8">Selecione o período de datas para filtrar os relatórios.</p>
             <div class="space-y-6">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-2 uppercase">Data de Início</label>
-                    <input type="text" id="modal-ini" class="input-data" value="01/01/2026">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-2 uppercase">Data de Término</label>
-                    <input type="text" id="modal-fim" class="input-data" value="31/01/2026">
-                </div>
+                <div><label class="block text-xs font-bold text-slate-300 mb-2 uppercase">Data de Início</label><input type="date" id="modal-ini" class="input-data"></div>
+                <div><label class="block text-xs font-bold text-slate-300 mb-2 uppercase">Data de Término</label><input type="date" id="modal-fim" class="input-data"></div>
             </div>
             <div class="flex gap-4 mt-10">
                 <button onclick="fecharModalFiltro()" class="flex-1 bg-slate-800 py-3 rounded-lg font-bold">Cancelar</button>
-                <button onclick="aplicarFiltroLocal()" class="btn-aplicar flex-1">Aplicar Filtros</button>
+                <button onclick="aplicarFiltroLocal()" class="btn-aplicar flex-1 uppercase">Aplicar Filtros</button>
             </div>
         </div>
     </div>
@@ -158,37 +127,46 @@
         document.getElementById('perfil-nome-grande').innerText = user;
         document.getElementById('perfil-sobrenome').innerText = user;
 
+        // Listener Principal: Soma todo o histórico de lançamentos
         db.ref('usuarios/' + user).on('value', (s) => {
             const d = s.val();
             if(d) {
-                document.getElementById('ftd').innerText = d.ftd || 0;
-                document.getElementById('registros').innerText = d.registros || 0;
-                document.getElementById('qftd').innerText = d.qftd || 0;
-                document.getElementById('depositos').innerText = "R$ " + parseFloat(d.depositos || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
-                document.getElementById('cpa').innerText = "R$ " + parseFloat(d.saldo || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
-                document.getElementById('total').innerText = "R$ " + (parseFloat(d.saldo || 0) + parseFloat(d.rev || 0)).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                let r = 0, f = 0, dep = 0, cpa = 0;
+                if(d.historico) {
+                    Object.values(d.historico).forEach(dia => {
+                        r += parseInt(dia.registros || 0);
+                        f += parseInt(dia.ftd || 0);
+                        dep += parseFloat(dia.depositos || 0);
+                        cpa += parseFloat(dia.cpa || 0);
+                    });
+                }
+                document.getElementById('registros').innerText = r;
+                document.getElementById('ftd').innerText = f;
+                document.getElementById('qftd').innerText = f;
+                document.getElementById('depositos').innerText = "R$ " + dep.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                document.getElementById('cpa').innerText = "R$ " + cpa.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                document.getElementById('total').innerText = "R$ " + cpa.toLocaleString('pt-BR', {minimumFractionDigits: 2});
                 
-                const periodo = (d.dataInicio || "01/01/2026") + " - " + (d.dataFim || "31/01/2026");
-                document.getElementById('periodo-exibicao').innerText = periodo;
-                document.getElementById('modal-ini').value = d.dataInicio || "01/01/2026";
-                document.getElementById('modal-fim').value = d.dataFim || "31/01/2026";
+                document.getElementById('periodo-exibicao').innerText = (d.dataInicio || "01/01/2026") + " - " + (d.dataFim || "31/01/2026");
+                document.getElementById('modal-ini').value = d.dataInicio ? d.dataInicio.split('/').reverse().join('-') : "2026-01-01";
+                document.getElementById('modal-fim').value = d.dataFim ? d.dataFim.split('/').reverse().join('-') : "2026-01-31";
             }
         });
 
-        function abrirModalFiltro() { document.getElementById('modal-filtro').classList.remove('hidden'); }
-        function fecharModalFiltro() { document.getElementById('modal-filtro').classList.add('hidden'); }
-        
         function aplicarFiltroLocal() {
-            const dataIni = document.getElementById('modal-ini').value;
-            const dataFim = document.getElementById('modal-fim').value;
-            db.ref('usuarios/' + user).update({ dataInicio: dataIni, dataFim: dataFim }).then(() => {
+            const di = document.getElementById('modal-ini').value.split('-').reverse().join('/');
+            const df = document.getElementById('modal-fim').value.split('-').reverse().join('/');
+            db.ref('usuarios/' + user).update({ dataInicio: di, dataFim: df }).then(() => {
                 fecharModalFiltro();
-                const t = document.getElementById("toast");
-                t.className = "show";
+                const t = document.getElementById("toast"); t.className = "show";
                 setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
             });
         }
 
+        function abrirModalFiltro() { document.getElementById('modal-filtro').classList.remove('hidden'); }
+        function fecharModalFiltro() { document.getElementById('modal-filtro').classList.add('hidden'); }
+        function toggleDropdown() { document.getElementById('dropdown').classList.toggle('hidden'); }
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
         function mudarTab(tab) {
             document.getElementById('secao-overview').classList.toggle('hidden', tab !== 'overview');
             document.getElementById('secao-perfil').classList.toggle('hidden', tab !== 'perfil');
@@ -196,9 +174,6 @@
             document.getElementById('titulo-pagina').innerText = tab === 'overview' ? 'Overview' : 'Meu Perfil';
             document.getElementById('dropdown').classList.add('hidden');
         }
-
-        function toggleDropdown() { document.getElementById('dropdown').classList.toggle('hidden'); }
-        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
         lucide.createIcons();
     </script>
 </body>
