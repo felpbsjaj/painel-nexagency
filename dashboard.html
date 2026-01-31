@@ -11,13 +11,13 @@
     <style>
         body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: white; margin: 0; }
         .sidebar { background-color: #1a2235; border-right: 1px solid #2d3748; height: 100vh; position: sticky; top: 0; }
-        .card-stat { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; transition: 0.3s; }
-        .card-stat:hover { background-color: #243147; border-color: #4a5568; }
+        /* Layout de linha cinza sutil conforme pedido */
+        .card-stat { background-color: transparent; border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; transition: 0.3s; }
+        .card-stat:hover { background-color: #1e293b; border-color: #4a5568; }
         .text-label { color: #94a3b8; font-size: 13px; font-weight: 600; }
         .text-value { font-size: 26px; font-weight: 800; }
         .highlight-blue { border: 1px solid #3b82f6 !important; }
-        .profile-card { background-color: #1e293b; border-radius: 12px; padding: 40px; }
-        .dropdown-menu { background-color: #1e293b; border: 1px solid #334155; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); }
+        .filter-box { background-color: transparent; border: 1px solid #334155; border-radius: 8px; padding: 8px 16px; display: flex; align-items: center; gap: 10px; min-width: 200px; }
     </style>
 </head>
 <body class="flex">
@@ -26,102 +26,90 @@
         <img src="https://res.cloudinary.com/dsreg6hmo/image/upload/v1767891428/BetBoard/Photos/gpkghm2vdoohymfufbuw.png" class="h-8 mb-10 w-fit">
         <nav class="space-y-4 flex-1">
             <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Menu Principal</p>
-            <button onclick="mudarTab('overview')" id="btn-overview" class="flex items-center w-full text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500">
+            <button onclick="mudarTab('overview')" id="btn-overview" class="flex items-center w-full text-blue-400 p-3 rounded-lg border-l-4 border-blue-500">
                 <span class="mr-3">📊</span> Overview
             </button>
             <button onclick="mudarTab('perfil')" id="btn-perfil" class="flex items-center w-full text-slate-400 hover:text-white p-3 rounded-lg transition">
                 <span class="mr-3">👤</span> Meu Perfil
             </button>
         </nav>
-        <button onclick="logout()" class="flex items-center text-slate-400 hover:text-red-400 p-3 transition border-t border-slate-700 pt-6">
+        <button onclick="logout()" class="flex items-center text-slate-500 hover:text-red-400 p-3 transition border-t border-slate-700 pt-6">
             <span class="mr-3">🚪</span> Sair
         </button>
     </aside>
 
     <main class="flex-1 p-8">
-        <header class="flex justify-between items-center mb-10">
+        <header class="flex justify-between items-center mb-6">
             <h2 id="titulo-pagina" class="text-2xl font-bold">Overview</h2>
             <div class="relative">
-                <button onclick="toggleDropdown()" class="flex items-center gap-3 bg-slate-800/40 p-1 px-4 rounded-full border border-slate-700 hover:border-blue-500 transition">
+                <button onclick="toggleDropdown()" class="flex items-center gap-3 bg-transparent p-1 px-4 rounded-full border border-slate-700 hover:border-blue-500 transition">
                     <span id="top-user-name" class="text-sm font-medium text-slate-300">...</span>
                     <div class="h-9 w-9 bg-slate-600 rounded-full flex items-center justify-center text-sm font-bold border border-blue-500">N-</div>
                 </button>
-                <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 dropdown-menu rounded-xl z-50 overflow-hidden">
-                    <button onclick="mudarTab('perfil')" class="flex items-center w-full p-4 text-sm text-slate-300 hover:bg-slate-700 transition">
-                        <span class="mr-3">👤</span> Meu Perfil
-                    </button>
-                    <button onclick="logout()" class="flex items-center w-full p-4 text-sm text-red-400 hover:bg-slate-700 transition border-t border-slate-700">
-                        <span class="mr-3">🚪</span> Sair
-                    </button>
+                <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-xl z-50 overflow-hidden">
+                    <button onclick="mudarTab('perfil')" class="flex items-center w-full p-4 text-sm text-slate-300 hover:bg-slate-700">👤 Meu Perfil</button>
+                    <button onclick="logout()" class="flex items-center w-full p-4 text-sm text-red-400 hover:bg-slate-700 border-t border-slate-700">🚪 Sair</button>
                 </div>
             </div>
         </header>
 
-        <div id="secao-overview" class="space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="card-stat">
-                    <img src="icones/rgst.svg" class="h-12">
-                    <div><p class="text-label">Registro</p><h3 id="registros" class="text-value">0</h3></div>
-                </div>
-                <div class="card-stat">
-                    <img src="icones/FTD-BkwOULkh.svg" class="h-12">
-                    <div><p class="text-label">FTD</p><h3 id="ftd" class="text-value">0</h3></div>
-                </div>
-                <div class="card-stat">
-                    <img src="icones/FTD-BkwOULkh.svg" class="h-12">
-                    <div><p class="text-label">QFTD</p><h3 id="qftd" class="text-value">0</h3></div>
-                </div>
-                <div class="card-stat">
-                    <img src="icones/deposito-BqL6OVL2.svg" class="h-12">
-                    <div><p class="text-label">Depósito</p><h3 id="depositos" class="text-value">R$ 0,00</h3></div>
-                </div>
-                <div class="card-stat">
-                    <img src="icones/Rev-Cd_d35Vr.svg" class="h-12">
-                    <div><p class="text-label">REV</p><h3 class="text-value">R$ 0,00</h3></div>
-                </div>
-                <div class="card-stat highlight-blue">
-                    <img src="icones/cpa.svg" class="h-12">
-                    <div><p class="text-label text-blue-400">CPA</p><h3 id="cpa" class="text-value">R$ 0,00</h3></div>
-                </div>
-                <div class="card-stat col-span-1 md:col-span-2 lg:col-span-1">
-                    <img src="icones/cprev.svg" class="h-12">
-                    <div><p class="text-label">REV + CPA</p><h3 id="total" class="text-value">R$ 0,00</h3></div>
-                </div>
+        <div id="filtros-topo" class="flex gap-4 mb-10">
+            <div class="filter-box">
+                <img src="icones/calendario.svg" class="h-5"> <span id="data-inicio" class="text-sm text-slate-400">Data início: 01/01/2026</span>
+            </div>
+            <div class="filter-box">
+                <img src="icones/calendario.svg" class="h-5">
+                <span id="data-fim" class="text-sm text-slate-400">Data fim: 31/01/2026</span>
+            </div>
+        </div>
+
+        <div id="secao-overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-stat">
+                <img src="icones/rgst.svg" class="h-12">
+                <div><p class="text-label">Registro</p><h3 id="registros" class="text-value">0</h3></div>
+            </div>
+            <div class="card-stat">
+                <img src="icones/FTD-BkwOULkh.svg" class="h-12">
+                <div><p class="text-label">FTD</p><h3 id="ftd" class="text-value">0</h3></div>
+            </div>
+            <div class="card-stat">
+                <img src="icones/FTD-BkwOULkh.svg" class="h-12">
+                <div><p class="text-label">QFTD</p><h3 id="qftd" class="text-value">0</h3></div>
+            </div>
+            <div class="card-stat">
+                <img src="icones/deposito-BqL6OVL2.svg" class="h-12">
+                <div><p class="text-label">Depósito</p><h3 id="depositos" class="text-value text-green-400">R$ 0,00</h3></div>
+            </div>
+            <div class="card-stat">
+                <img src="icones/Rev-Cd_d35Vr.svg" class="h-12">
+                <div><p class="text-label">REV</p><h3 class="text-value text-green-400">R$ 0,00</h3></div>
+            </div>
+            <div class="card-stat highlight-blue">
+                <img src="icones/cpa.svg" class="h-12">
+                <div><p class="text-label text-blue-400">CPA</p><h3 id="cpa" class="text-value text-green-400">R$ 0,00</h3></div>
+            </div>
+            <div class="card-stat">
+                <img src="icones/cprev.svg" class="h-12">
+                <div><p class="text-label">REV + CPA</p><h3 id="total" class="text-value text-green-400">R$ 0,00</h3></div>
             </div>
         </div>
 
         <div id="secao-perfil" class="hidden max-w-4xl mx-auto">
-            <div class="profile-card text-center relative">
+            <div class="profile-card text-center">
                 <div class="h-32 w-32 bg-slate-700 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold border-4 border-slate-600 relative">
-                    N- <div class="absolute bottom-1 right-1 h-6 w-6 bg-green-500 rounded-full border-4 border-[#1e293b] flex items-center justify-center text-[10px]">✔</div>
+                    N- <div class="absolute bottom-1 right-1 h-6 w-6 bg-green-500 rounded-full border-4 border-[#0f172a] flex items-center justify-center text-[10px]">✔</div>
                 </div>
-                <h2 class="text-2xl font-bold mb-4 uppercase tracking-tight">NEX AGENCY - <span id="perfil-nome-grande">...</span></h2>
-                <button class="bg-slate-900 border border-slate-700 px-6 py-2 rounded-lg text-xs font-semibold hover:bg-slate-800 transition">🛡 Alterar Senha</button>
-                
+                <h2 class="text-2xl font-bold mb-4 uppercase">NEX AGENCY - <span id="perfil-nome-grande">...</span></h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12 text-left">
-                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
-                        <div class="p-2 bg-slate-700 rounded-lg">👤</div>
-                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">Nome</p><p class="font-bold">NEX AGENCY -</p></div>
-                    </div>
-                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
-                        <div class="p-2 bg-slate-700 rounded-lg">👤</div>
-                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">Sobrenome</p><p id="perfil-sobrenome" class="font-bold">...</p></div>
-                    </div>
-                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
-                        <div class="p-2 bg-slate-700 rounded-lg">🛡</div>
-                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">Cargo</p><p class="font-bold text-green-400">Afiliado</p></div>
-                    </div>
-                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
-                        <div class="p-2 bg-slate-700 rounded-lg">✉</div>
-                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">E-mail</p><p id="perfil-email" class="font-bold text-slate-300">...</p></div>
-                    </div>
+                    <div class="card-stat"><p class="text-label">Nome: NEX AGENCY -</p></div>
+                    <div class="card-stat"><p class="text-label">Sobrenome: <span id="perfil-sobrenome">...</span></p></div>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        // CONFIGURAÇÃO FIREBASE
+        // Mesma configuração do Firebase que você mandou
         const firebaseConfig = {
             apiKey: "AIzaSyC0oiw7obzsGDBvDr_enJQ1eNHmgPkwNA8",
             authDomain: "nexagency-84caa.firebaseapp.com",
@@ -138,35 +126,7 @@
         if(!user) window.location.href = 'index.html';
 
         document.getElementById('top-user-name').innerText = user;
-        document.getElementById('perfil-nome-grande').innerText = user;
-        document.getElementById('perfil-sobrenome').innerText = user.toUpperCase();
-        document.getElementById('perfil-email').innerText = user.toLowerCase() + "@nexagency.com";
 
-        // Navegação de Tabs
-        function mudarTab(tab) {
-            const overview = document.getElementById('secao-overview');
-            const perfil = document.getElementById('secao-perfil');
-            const titulo = document.getElementById('titulo-pagina');
-            const btnO = document.getElementById('btn-overview');
-            const btnP = document.getElementById('btn-perfil');
-
-            if(tab === 'overview') {
-                overview.classList.remove('hidden'); perfil.classList.add('hidden');
-                titulo.innerText = "Overview";
-                btnO.className = "flex items-center w-full text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500";
-                btnP.className = "flex items-center w-full text-slate-400 hover:text-white p-3 rounded-lg transition";
-            } else {
-                overview.classList.add('hidden'); perfil.classList.remove('hidden');
-                titulo.innerText = "Meu Perfil";
-                btnP.className = "flex items-center w-full text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500";
-                btnO.className = "flex items-center w-full text-slate-400 hover:text-white p-3 rounded-lg transition";
-            }
-            document.getElementById('dropdown').classList.add('hidden');
-        }
-
-        function toggleDropdown() { document.getElementById('dropdown').classList.toggle('hidden'); }
-
-        // Dados em Tempo Real
         db.ref('usuarios/' + user).on('value', (s) => {
             const d = s.val();
             if(d) {
@@ -175,10 +135,22 @@
                 document.getElementById('qftd').innerText = d.qftd || 0;
                 document.getElementById('depositos').innerText = "R$ " + parseFloat(d.depositos || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
                 document.getElementById('cpa').innerText = "R$ " + parseFloat(d.saldo || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
-                document.getElementById('total').innerText = "R$ " + parseFloat(d.saldo || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                document.getElementById('total').innerText = "R$ " + (parseFloat(d.saldo || 0) + parseFloat(d.rev || 0)).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                // Sincroniza as datas do Admin
+                document.getElementById('data-inicio').innerText = "Data início: " + (d.dataInicio || "01/01/2026");
+                document.getElementById('data-fim').innerText = "Data fim: " + (d.dataFim || "31/01/2026");
             }
         });
 
+        function mudarTab(tab) {
+            document.getElementById('secao-overview').classList.toggle('hidden', tab !== 'overview');
+            document.getElementById('secao-perfil').classList.toggle('hidden', tab !== 'perfil');
+            document.getElementById('filtros-topo').classList.toggle('hidden', tab !== 'overview');
+            document.getElementById('titulo-pagina').innerText = tab === 'overview' ? 'Overview' : 'Meu Perfil';
+            document.getElementById('dropdown').classList.add('hidden');
+        }
+
+        function toggleDropdown() { document.getElementById('dropdown').classList.toggle('hidden'); }
         function logout() { localStorage.clear(); window.location.href = 'index.html'; }
     </script>
 </body>
