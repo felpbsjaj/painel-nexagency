@@ -15,11 +15,12 @@
         .tab-btn.active { border-color: #3b82f6; color: #3b82f6; background-color: #1e293b; }
         input, select { background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 8px; width: 100%; color: white; margin-bottom: 15px; outline: none; }
         input:focus { border-color: #3b82f6; }
-        .influ-card { background: #1e293b; border: 1px solid #334155; transition: 0.3s; cursor: pointer; }
-        .influ-card:hover { border-color: #3b82f6; background: #243147; }
         .badge { background: #a3e635; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; }
-        /* Estilo da Tela de Login */
         #login-admin-screen { background-color: #0f172a; position: fixed; inset: 0; z-index: 999; display: flex; align-items: center; justify-content: center; }
+        /* Estilos da nova tabela */
+        .admin-table th { background-color: #1e293b; color: #94a3b8; font-size: 10px; text-transform: uppercase; padding: 12px; border-bottom: 1px solid #334155; }
+        .admin-table td { padding: 12px; border-bottom: 1px solid #334155; font-size: 12px; }
+        .admin-table tr:hover { background-color: #243147; cursor: pointer; }
     </style>
 </head>
 <body class="flex min-h-screen">
@@ -49,8 +50,8 @@
         <div id="box-lancar">
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h2 class="text-2xl font-bold">Painel de Lançamento</h2>
-                    <p class="text-slate-500 text-sm">Selecione um influenciador abaixo para atualizar os dados.</p>
+                    <h2 class="text-2xl font-bold">Painel de Gerenciamento</h2>
+                    <p class="text-slate-500 text-sm">Visualize as senhas e selecione um influenciador para lançar dados.</p>
                 </div>
                 <div class="text-right">
                     <p class="text-[10px] font-bold text-slate-500 uppercase">Data de Lançamento</p>
@@ -58,11 +59,24 @@
                 </div>
             </div>
 
-            <div id="grid-influencers" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10"></div>
+            <div class="mb-10 overflow-hidden bg-slate-800/20 rounded-2xl border border-slate-700 shadow-xl">
+                <table class="w-full admin-table">
+                    <thead>
+                        <tr>
+                            <th>Influenciador</th>
+                            <th>Senha de Acesso</th>
+                            <th>Status</th>
+                            <th class="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-influencers">
+                        </tbody>
+                </table>
+            </div>
 
             <div id="form-edicao" class="hidden bg-slate-800/40 border border-blue-500/30 p-8 rounded-2xl">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold">Editando: <span id="user-selecionado" class="text-blue-400 uppercase"></span></h3>
+                    <h3 class="text-lg font-bold">Lançar para: <span id="user-selecionado" class="text-blue-400 uppercase"></span></h3>
                     <button onclick="fecharEdicao()" class="text-slate-500 hover:text-white text-xs uppercase font-bold">Cancelar ✕</button>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -90,7 +104,6 @@
     <script>
         const senhaMestre = "thaimorrowland2026";
         
-        // Verifica se já logou nesta sessão
         if(sessionStorage.getItem('adminLogado') === 'true') {
             document.getElementById('login-admin-screen').style.display = 'none';
         }
@@ -121,21 +134,24 @@
 
         function carregarCards() {
             db.ref('usuarios').once('value', s => {
-                const grid = document.getElementById('grid-influencers');
-                grid.innerHTML = '';
+                const tabela = document.getElementById('tabela-influencers');
+                tabela.innerHTML = '';
                 s.forEach(u => {
-                    const inicial = u.key.charAt(0).toUpperCase();
-                    grid.innerHTML += `
-                        <div class="influ-card p-6 rounded-xl" onclick="abrirEdicao('${u.key}')">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="h-10 w-10 bg-slate-700 rounded-lg flex items-center justify-center font-bold text-blue-400 border border-slate-600">${inicial}</div>
-                                <span class="badge">ATIVO</span>
-                            </div>
-                            <h4 class="font-bold uppercase text-xs tracking-tighter">${u.key}</h4>
-                            <p class="text-[10px] text-slate-500 mt-1">Clique para lançar dados</p>
-                        </div>
+                    const dados = u.val();
+                    tabela.innerHTML += `
+                        <tr onclick="abrirEdicao('${u.key}')">
+                            <td class="font-bold text-blue-400 uppercase tracking-tighter">${u.key}</td>
+                            <td class="font-mono text-slate-400">${dados.senha}</td>
+                            <td><span class="badge">ATIVO</span></td>
+                            <td class="text-right">
+                                <button onclick="event.stopPropagation(); excluirInfluencer('${u.key}')" class="text-red-500 hover:text-red-400 transition">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
                     `;
                 });
+                lucide.createIcons();
             });
         }
 
@@ -158,7 +174,7 @@
                 depositos: parseFloat(document.getElementById('edit-dep').value) || 0,
                 cpa: parseFloat(document.getElementById('edit-cpa').value) || 0
             }).then(() => {
-                alert("Sucesso: Dados de " + data + " salvos para " + usuarioSelecionado);
+                alert("Sucesso: Dados de " + data + " salvos!");
                 fecharEdicao();
             });
         }
@@ -168,7 +184,13 @@
             const p = document.getElementById('new-pass').value;
             if(!u || !p) return alert("Dados incompletos!");
             db.ref('usuarios/' + u).set({ senha: p, dataInicio: "01/01/2026", dataFim: "31/12/2026" })
-            .then(() => { alert("Influenciador " + u + " cadastrado!"); mudarAdminTab('lancar'); });
+            .then(() => { alert("Influenciador " + u + " cadastrado!"); mudarTab('lancar'); });
+        }
+
+        function excluirInfluencer(u) {
+            if(confirm("Deseja realmente excluir " + u + "?")) {
+                db.ref('usuarios/' + u).remove().then(() => carregarCards());
+            }
         }
 
         carregarCards();
