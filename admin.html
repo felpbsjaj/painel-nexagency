@@ -2,156 +2,85 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>NexAgency - Admin Master v2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexAgency - Acesso Restrito</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
-        .sidebar { background-color: #1a2235; border-right: 1px solid #2d3748; }
-        .tab-btn { padding: 12px 24px; border-bottom: 2px solid transparent; transition: 0.3s; color: #94a3b8; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
-        .tab-btn.active { border-color: #3b82f6; color: #3b82f6; background-color: #1e293b; }
-        input, select { background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 8px; width: 100%; color: white; margin-bottom: 15px; outline: none; }
-        input:focus { border-color: #3b82f6; }
-        .influ-card { background: #1e293b; border: 1px solid #334155; transition: 0.3s; cursor: pointer; }
-        .influ-card:hover { border-color: #3b82f6; background: #243147; }
-        .badge { background: #a3e635; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; }
+        body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: white; }
+        .login-card { background-color: #1a2235; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        input { background: #0f172a !important; border: 1px solid #334155 !important; transition: 0.3s; }
+        input:focus { border-color: #3b82f6 !important; outline: none; }
     </style>
 </head>
-<body class="flex min-h-screen">
-    <script>
-        const senhaMestre = "thaimorrowland2026";
-        if (prompt("Senha de Admin:") !== senhaMestre) { window.location.href = "index.html"; }
-    </script>
+<body class="flex items-center justify-center min-h-screen p-6">
 
-    <aside class="w-64 sidebar p-6 hidden md:flex flex-col">
-        <img src="https://res.cloudinary.com/dsreg6hmo/image/upload/v1767891428/BetBoard/Photos/gpkghm2vdoohymfufbuw.png" class="h-6 mb-10 w-fit">
-        <nav class="space-y-2">
-            <button onclick="mudarAdminTab('lancar')" id="btn-tab-l" class="flex items-center w-full text-blue-400 p-3 rounded-lg bg-slate-800/50 border-l-4 border-blue-500 font-bold text-sm">
-                <i data-lucide="line-chart" class="mr-3 w-4 h-4"></i> Lançamentos
-            </button>
-            <button onclick="mudarAdminTab('criar')" id="btn-tab-c" class="flex items-center w-full text-slate-400 p-3 rounded-lg hover:text-white transition font-bold text-sm">
-                <i data-lucide="user-plus" class="mr-3 w-4 h-4"></i> Criar Login
-            </button>
-        </nav>
-    </aside>
-
-    <main class="flex-1 p-10">
-        <div id="box-lancar">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-2xl font-bold">Painel de Lançamento</h2>
-                    <p class="text-slate-500 text-sm">Selecione um influenciador abaixo para atualizar os dados.</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase">Data de Lançamento</p>
-                    <input type="date" id="data-global" class="!mb-0 !p-2 !w-40 text-xs">
-                </div>
-            </div>
-
-            <div id="grid-influencers" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-                </div>
-
-            <div id="form-edicao" class="hidden bg-slate-800/40 border border-blue-500/30 p-8 rounded-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold">Editando: <span id="user-selecionado" class="text-blue-400 uppercase"></span></h3>
-                    <button onclick="fecharEdicao()" class="text-slate-500 hover:text-white text-xs uppercase font-bold">Cancelar ✕</button>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div><label class="text-[10px] text-slate-500 font-bold uppercase">Registros</label><input type="number" id="edit-reg" value="0"></div>
-                    <div><label class="text-[10px] text-slate-500 font-bold uppercase">FTDs</label><input type="number" id="edit-ftd" value="0"></div>
-                    <div><label class="text-[10px] text-slate-500 font-bold uppercase">Depósitos (R$)</label><input type="number" id="edit-dep" value="0"></div>
-                    <div><label class="text-[10px] text-slate-500 font-bold uppercase">CPA (R$)</label><input type="number" id="edit-cpa" value="0"></div>
-                </div>
-                <button onclick="salvarNoHistorico()" class="w-full bg-green-600 hover:bg-green-500 p-4 rounded-xl font-bold transition mt-4 uppercase text-sm">Confirmar Lançamento Diário</button>
-            </div>
+    <div class="w-full max-w-md login-card p-10 rounded-3xl">
+        <div class="text-center mb-10">
+            <img src="https://res.cloudinary.com/dsreg6hmo/image/upload/v1767891428/BetBoard/Photos/gpkghm2vdoohymfufbuw.png" class="h-8 mx-auto mb-6">
+            <h2 class="text-lg font-bold uppercase tracking-widest text-slate-400">NexAgency Affiliates</h2>
         </div>
 
-        <div id="box-criar" class="hidden max-w-xl">
-            <h2 class="text-2xl font-bold mb-6">Novo Influenciador</h2>
-            <div class="bg-slate-800/20 p-8 rounded-2xl border border-slate-700">
-                <label class="text-[10px] text-slate-500 font-bold uppercase">Nome de Usuário</label>
-                <input type="text" id="new-user" placeholder="Ex: rayssa_costa">
-                <label class="text-[10px] text-slate-500 font-bold uppercase">Senha Inicial</label>
-                <input type="password" id="new-pass" placeholder="Ex: superbet2026">
-                <button onclick="criarUsuario()" class="w-full bg-blue-600 hover:bg-blue-500 p-4 rounded-xl font-bold transition uppercase mt-4">Criar Acesso</button>
+        <div class="space-y-6">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2">Usuário / Login</label>
+                <input type="text" id="user" class="w-full p-4 rounded-xl text-white" placeholder="Seu nome de usuário">
             </div>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2">Senha de Acesso</label>
+                <input type="password" id="pass" class="w-full p-4 rounded-xl text-white" placeholder="••••••••">
+            </div>
+            
+            <button onclick="realizarLogin()" class="w-full bg-blue-600 hover:bg-blue-500 p-4 rounded-xl font-bold uppercase text-sm transition shadow-lg shadow-blue-500/20">
+                Acessar Painel
+            </button>
         </div>
-    </main>
+
+        <p class="text-center text-slate-600 text-[10px] mt-10 uppercase font-bold">
+            © 2026 NexAgency & Superbet Marketing
+        </p>
+    </div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyC0oiw7obzsGDBvDr_enJQ1eNHmgPkwNA8", authDomain: "nexagency-84caa.firebaseapp.com", databaseURL: "https://nexagency-84caa-default-rtdb.firebaseio.com", projectId: "nexagency-84caa", storageBucket: "nexagency-84caa.firebasestorage.app", messagingSenderId: "691404707224", appId: "1:691404707224:web:8fed7daf6b4c7c9f8347ed" };
+        // CONFIGURAÇÃO DO SEU FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyC0oiw7obzsGDBvDr_enJQ1eNHmgPkwNA8",
+            authDomain: "nexagency-84caa.firebaseapp.com",
+            databaseURL: "https://nexagency-84caa-default-rtdb.firebaseio.com",
+            projectId: "nexagency-84caa",
+            storageBucket: "nexagency-84caa.firebasestorage.app",
+            messagingSenderId: "691404707224",
+            appId: "1:691404707224:web:8fed7daf6b4c7c9f8347ed"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        document.getElementById('data-global').valueAsDate = new Date();
+        function realizarLogin() {
+            const u = document.getElementById('user').value.toLowerCase().trim();
+            const p = document.getElementById('pass').value;
 
-        function mudarAdminTab(tab) {
-            document.getElementById('box-lancar').classList.toggle('hidden', tab !== 'lancar');
-            document.getElementById('box-criar').classList.toggle('hidden', tab !== 'criar');
-            // Atualiza estilo dos botões
-            document.getElementById('btn-tab-l').className = tab === 'lancar' ? 'flex items-center w-full text-blue-400 p-3 rounded-lg bg-slate-800/50 border-l-4 border-blue-500 font-bold text-sm' : 'flex items-center w-full text-slate-400 p-3 rounded-lg hover:text-white transition font-bold text-sm';
-            document.getElementById('btn-tab-c').className = tab === 'criar' ? 'flex items-center w-full text-blue-400 p-3 rounded-lg bg-slate-800/50 border-l-4 border-blue-500 font-bold text-sm' : 'flex items-center w-full text-slate-400 p-3 rounded-lg hover:text-white transition font-bold text-sm';
-            if(tab === 'lancar') carregarCards();
-        }
+            if(!u || !p) return alert("Preencha todos os campos!");
 
-        function carregarCards() {
-            db.ref('usuarios').once('value', s => {
-                const grid = document.getElementById('grid-influencers');
-                grid.innerHTML = '';
-                s.forEach(u => {
-                    const inicial = u.key.charAt(0).toUpperCase();
-                    grid.innerHTML += `
-                        <div class="influ-card p-6 rounded-xl" onclick="abrirEdicao('${u.key}')">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="h-10 w-10 bg-slate-700 rounded-lg flex items-center justify-center font-bold text-blue-400 border border-slate-600">${inicial}</div>
-                                <span class="badge">ATIVO</span>
-                            </div>
-                            <h4 class="font-bold uppercase text-xs tracking-tighter">${u.key}</h4>
-                            <p class="text-[10px] text-slate-500 mt-1">Clique para lançar dados</p>
-                        </div>
-                    `;
-                });
+            // LOGIN DE ADMIN
+            if(u === "admin" && p === "thaimorrowland2026") {
+                sessionStorage.setItem('adminAuth', 'true');
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            // LOGIN DE INFLUENCER
+            db.ref('usuarios/' + u).once('value', (snapshot) => {
+                const dados = snapshot.val();
+                if(dados && dados.senha === p) {
+                    localStorage.setItem('usuarioLogado', u);
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert("Usuário ou senha inválidos.");
+                }
             });
         }
-
-        let usuarioSelecionado = "";
-        function abrirEdicao(u) {
-            usuarioSelecionado = u;
-            document.getElementById('user-selecionado').innerText = u;
-            document.getElementById('form-edicao').classList.remove('hidden');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-
-        function fecharEdicao() { document.getElementById('form-edicao').classList.add('hidden'); }
-
-        function salvarNoHistorico() {
-            const data = document.getElementById('data-global').value;
-            if(!usuarioSelecionado || !data) return alert("Selecione a data!");
-
-            db.ref('usuarios/' + usuarioSelecionado + '/historico/' + data).set({
-                registros: parseInt(document.getElementById('edit-reg').value) || 0,
-                ftd: parseInt(document.getElementById('edit-ftd').value) || 0,
-                depositos: parseFloat(document.getElementById('edit-dep').value) || 0,
-                cpa: parseFloat(document.getElementById('edit-cpa').value) || 0
-            }).then(() => {
-                alert("Sucesso: Dados de " + data + " salvos para " + usuarioSelecionado);
-                fecharEdicao();
-            });
-        }
-
-        function criarUsuario() {
-            const u = document.getElementById('new-user').value.toLowerCase().trim();
-            const p = document.getElementById('new-pass').value;
-            if(!u || !p) return alert("Dados incompletos!");
-            db.ref('usuarios/' + u).set({ senha: p, dataInicio: "01/01/2026", dataFim: "31/12/2026" })
-            .then(() => { alert("Influenciador " + u + " cadastrado!"); mudarAdminTab('lancar'); });
-        }
-
-        carregarCards();
-        lucide.createIcons();
     </script>
 </body>
 </html>
