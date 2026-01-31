@@ -16,45 +16,54 @@
 </head>
 <body class="p-10">
     <script>
-        // Proteção por senha conforme solicitado anteriormente
         const senhaMestre = "thaimorrowland2026";
         if (prompt("Senha de Admin:") !== senhaMestre) { window.location.href = "index.html"; }
     </script>
 
     <div class="max-w-4xl mx-auto">
         <div class="flex border-b border-slate-700 mb-10">
-            <button onclick="mudarAdminTab('criar')" id="tab-c" class="tab-btn active font-bold">➕ Criar Logins</button>
-            <button onclick="mudarAdminTab('lancar')" id="tab-l" class="tab-btn font-bold">📝 Lançar Valores</button>
+            <button onclick="mudarAdminTab('criar')" id="tab-c" class="tab-btn active font-bold uppercase text-xs tracking-widest">➕ Criar Logins</button>
+            <button onclick="mudarAdminTab('lancar')" id="tab-l" class="tab-btn font-bold uppercase text-xs tracking-widest">📝 Lançar Valores</button>
         </div>
 
         <div id="box-criar" class="bg-slate-800/20 p-8 rounded-2xl border border-slate-700">
-            <h2 class="text-xl font-bold mb-6">Cadastrar Novo Influenciador</h2>
+            <h2 class="text-xl font-bold mb-6 text-blue-400">Cadastrar Novo Influenciador</h2>
             <input type="text" id="new-user" placeholder="Nome de Usuário (Login)">
             <input type="password" id="new-pass" placeholder="Senha de Acesso">
             <button onclick="criarUsuario()" class="w-full bg-blue-600 hover:bg-blue-500 p-4 rounded-xl font-bold transition">CRIAR CONTA</button>
         </div>
 
         <div id="box-lancar" class="hidden bg-slate-800/20 p-8 rounded-2xl border border-slate-700">
-            <h2 class="text-xl font-bold mb-6">Atualizar Painel do Influencer</h2>
-            <select id="select-user" onchange="puxarDadosUser()">
+            <h2 class="text-xl font-bold mb-2">Lançamento Diário</h2>
+            <p class="text-xs text-slate-500 mb-6 uppercase font-bold">Os dados serão salvos no histórico do influencer</p>
+            
+            <select id="select-user">
                 <option value="">Selecione o Influencer...</option>
             </select>
             
-            <div class="grid grid-cols-2 gap-4">
-                <div><label class="text-xs text-slate-500 font-bold">REGISTROS</label><input type="number" id="edit-reg"></div>
-                <div><label class="text-xs text-slate-500 font-bold">FTD</label><input type="number" id="edit-ftd"></div>
-                <div><label class="text-xs text-slate-500 font-bold">DEPÓSITOS (R$)</label><input type="number" id="edit-dep"></div>
-                <div><label class="text-xs text-slate-500 font-bold">CPA / SALDO (R$)</label><input type="number" id="edit-cpa"></div>
-                <div><label class="text-xs text-slate-500 font-bold">DATA INÍCIO</label><input type="text" id="edit-data-ini"></div>
-                <div><label class="text-xs text-slate-500 font-bold">DATA FIM</label><input type="text" id="edit-data-fim"></div>
+            <div>
+                <label class="text-[10px] text-slate-500 font-bold uppercase">DATA DO REGISTRO (Padrao: Hoje)</label>
+                <input type="date" id="edit-data-registro">
             </div>
-            <button onclick="salvarAlteracoes()" class="w-full bg-green-600 hover:bg-green-500 p-4 rounded-xl font-bold transition mt-4 uppercase">Lançar Valores Agora</button>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">REGISTROS</label><input type="number" id="edit-reg" value="0"></div>
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">FTD</label><input type="number" id="edit-ftd" value="0"></div>
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">DEPÓSITOS (R$)</label><input type="number" id="edit-dep" value="0"></div>
+                <div><label class="text-[10px] text-slate-500 font-bold uppercase">CPA / SALDO (R$)</label><input type="number" id="edit-cpa" value="0"></div>
+            </div>
+            
+            <button onclick="salvarAlteracoes()" class="w-full bg-green-600 hover:bg-green-500 p-4 rounded-xl font-bold transition mt-4 uppercase">Salvar no Histórico</button>
         </div>
     </div>
 
     <script>
-        firebase.initializeApp({ /* Use sua config aqui */ });
+        const firebaseConfig = { apiKey: "AIzaSyC0oiw7obzsGDBvDr_enJQ1eNHmgPkwNA8", authDomain: "nexagency-84caa.firebaseapp.com", databaseURL: "https://nexagency-84caa-default-rtdb.firebaseio.com", projectId: "nexagency-84caa", storageBucket: "nexagency-84caa.firebasestorage.app", messagingSenderId: "691404707224", appId: "1:691404707224:web:8fed7daf6b4c7c9f8347ed" };
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        // Define a data de hoje no input ao carregar
+        document.getElementById('edit-data-registro').valueAsDate = new Date();
 
         function mudarAdminTab(tab) {
             document.getElementById('box-criar').classList.toggle('hidden', tab !== 'criar');
@@ -68,28 +77,38 @@
             db.ref('usuarios').once('value', s => {
                 const sel = document.getElementById('select-user');
                 sel.innerHTML = '<option value="">Selecione o Influencer...</option>';
-                s.forEach(u => sel.innerHTML += `<option value="${u.key}">${u.key}</option>`);
+                s.forEach(u => sel.innerHTML += `<option value="${u.key}">${u.key.toUpperCase()}</option>`);
             });
         }
 
         function criarUsuario() {
-            const u = document.getElementById('new-user').value;
+            const u = document.getElementById('new-user').value.toLowerCase().trim();
             const p = document.getElementById('new-pass').value;
             if(!u || !p) return alert("Preencha tudo!");
-            db.ref('usuarios/' + u).set({ senha: p, saldo: 0, ftd: 0, registros: 0, dataInicio: "01/01/2026", dataFim: "31/01/2026" })
-            .then(() => alert("Usuário criado!"));
+            
+            db.ref('usuarios/' + u).set({ 
+                senha: p, 
+                dataInicio: "01/01/2026", 
+                dataFim: "31/12/2026" 
+            }).then(() => alert("Usuário " + u + " criado!"));
         }
 
         function salvarAlteracoes() {
             const u = document.getElementById('select-user').value;
-            db.ref('usuarios/' + u).update({
-                registros: document.getElementById('edit-reg').value,
-                ftd: document.getElementById('edit-ftd').value,
-                depositos: document.getElementById('edit-dep').value,
-                saldo: document.getElementById('edit-cpa').value,
-                dataInicio: document.getElementById('edit-data-ini').value,
-                dataFim: document.getElementById('edit-data-fim').value
-            }).then(() => alert("Valores lançados com sucesso!"));
+            const dataInput = document.getElementById('edit-data-registro').value; // Formato YYYY-MM-DD
+            
+            if(!u || !dataInput) return alert("Selecione o influencer e a data!");
+
+            // Salva dentro de uma pasta 'historico' com a data como chave
+            db.ref('usuarios/' + u + '/historico/' + dataInput).set({
+                registros: parseInt(document.getElementById('edit-reg').value) || 0,
+                ftd: parseInt(document.getElementById('edit-ftd').value) || 0,
+                depositos: parseFloat(document.getElementById('edit-dep').value) || 0,
+                cpa: parseFloat(document.getElementById('edit-cpa').value) || 0,
+                atualizadoEm: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                alert("Dados salvos no histórico de " + u + " para o dia " + dataInput);
+            });
         }
     </script>
 </body>
