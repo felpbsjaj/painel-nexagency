@@ -3,96 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexAgency - Overview</title>
+    <title>NexAgency - Sistema de Afiliados</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: white; margin: 0; }
-        .sidebar { background-color: #1e293b; border-right: 1px solid #334155; min-height: 100vh; }
-        /* Estilo dos Cards idêntico ao print */
-        .card-stat { 
-            background-color: #1e293b; 
-            border: 1px solid #334155; 
-            border-radius: 12px; 
-            padding: 20px; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px;
-            transition: 0.3s;
-        }
-        .card-stat:hover { border-color: #3b82f6; background-color: #243147; }
-        .text-label { color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: capitalize; }
-        .text-value { font-size: 24px; font-weight: 800; margin-top: -2px; }
-        .highlight-blue { border: 1px solid #3b82f6 !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.1); }
+        .sidebar { background-color: #1a2235; border-right: 1px solid #2d3748; height: 100vh; position: sticky; top: 0; }
+        .card-stat { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; transition: 0.3s; }
+        .card-stat:hover { background-color: #243147; border-color: #4a5568; }
+        .text-label { color: #94a3b8; font-size: 13px; font-weight: 600; }
+        .text-value { font-size: 26px; font-weight: 800; }
+        .highlight-blue { border: 1px solid #3b82f6 !important; }
+        .profile-card { background-color: #1e293b; border-radius: 12px; padding: 40px; }
+        .dropdown-menu { background-color: #1e293b; border: 1px solid #334155; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); }
     </style>
 </head>
 <body class="flex">
 
-    <aside class="w-64 sidebar hidden md:flex flex-col p-6 sticky top-0 h-screen">
+    <aside class="w-64 sidebar hidden md:flex flex-col p-6">
         <img src="https://res.cloudinary.com/dsreg6hmo/image/upload/v1767891428/BetBoard/Photos/gpkghm2vdoohymfufbuw.png" class="h-8 mb-10 w-fit">
-        <nav class="space-y-4">
-            <div class="text-slate-500 text-[10px] font-bold uppercase tracking-wider">Menu Principal</div>
-            <a href="#" class="flex items-center text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500">
+        <nav class="space-y-4 flex-1">
+            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Menu Principal</p>
+            <button onclick="mudarTab('overview')" id="btn-overview" class="flex items-center w-full text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500">
                 <span class="mr-3">📊</span> Overview
-            </a>
-            <button onclick="logout()" class="flex items-center text-slate-400 hover:text-white p-3 w-full text-left mt-20">
-                <span class="mr-3">↪️</span> Sair
+            </button>
+            <button onclick="mudarTab('perfil')" id="btn-perfil" class="flex items-center w-full text-slate-400 hover:text-white p-3 rounded-lg transition">
+                <span class="mr-3">👤</span> Meu Perfil
             </button>
         </nav>
+        <button onclick="logout()" class="flex items-center text-slate-400 hover:text-red-400 p-3 transition border-t border-slate-700 pt-6">
+            <span class="mr-3">🚪</span> Sair
+        </button>
     </aside>
 
     <main class="flex-1 p-8">
         <header class="flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-bold">Overview</h2>
-            <div class="flex items-center gap-3 bg-slate-800/40 p-2 px-4 rounded-full border border-slate-700">
-                <span id="userName" class="text-sm font-medium">...</span>
-                <div class="h-8 w-8 bg-slate-700 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500">N-</div>
+            <h2 id="titulo-pagina" class="text-2xl font-bold">Overview</h2>
+            <div class="relative">
+                <button onclick="toggleDropdown()" class="flex items-center gap-3 bg-slate-800/40 p-1 px-4 rounded-full border border-slate-700 hover:border-blue-500 transition">
+                    <span id="top-user-name" class="text-sm font-medium text-slate-300">...</span>
+                    <div class="h-9 w-9 bg-slate-600 rounded-full flex items-center justify-center text-sm font-bold border border-blue-500">N-</div>
+                </button>
+                <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 dropdown-menu rounded-xl z-50 overflow-hidden">
+                    <button onclick="mudarTab('perfil')" class="flex items-center w-full p-4 text-sm text-slate-300 hover:bg-slate-700 transition">
+                        <span class="mr-3">👤</span> Meu Perfil
+                    </button>
+                    <button onclick="logout()" class="flex items-center w-full p-4 text-sm text-red-400 hover:bg-slate-700 transition border-t border-slate-700">
+                        <span class="mr-3">🚪</span> Sair
+                    </button>
+                </div>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            
-            <div class="card-stat">
-                <img src="icones/Cadastro 2-dlmE--7A.svg" class="h-12 w-12">
-                <div><div class="text-label">Registro</div><div id="registros" class="text-value">0</div></div>
+        <div id="secao-overview" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card-stat">
+                    <img src="icones/Cadastro 2-dlmE--7A.svg" class="h-12">
+                    <div><p class="text-label">Registro</p><h3 id="registros" class="text-value">0</h3></div>
+                </div>
+                <div class="card-stat">
+                    <img src="icones/FTD-BkwOULkh.svg" class="h-12">
+                    <div><p class="text-label">FTD</p><h3 id="ftd" class="text-value">0</h3></div>
+                </div>
+                <div class="card-stat">
+                    <img src="icones/FTD-BkwOULkh.svg" class="h-12">
+                    <div><p class="text-label">QFTD</p><h3 id="qftd" class="text-value">0</h3></div>
+                </div>
+                <div class="card-stat">
+                    <img src="icones/deposito-BqL6OVL2.svg" class="h-12">
+                    <div><p class="text-label">Depósito</p><h3 id="depositos" class="text-value">R$ 0,00</h3></div>
+                </div>
+                <div class="card-stat">
+                    <img src="icones/Rev-Cd_d35Vr.svg" class="h-12">
+                    <div><p class="text-label">REV</p><h3 class="text-value">R$ 0,00</h3></div>
+                </div>
+                <div class="card-stat highlight-blue">
+                    <img src="icones/valor-D6_MFIlE.svg" class="h-12">
+                    <div><p class="text-label text-blue-400">CPA</p><h3 id="cpa" class="text-value">R$ 0,00</h3></div>
+                </div>
+                <div class="card-stat col-span-1 md:col-span-2 lg:col-span-1">
+                    <img src="icones/Liquido Total2-BCbklALr.svg" class="h-12">
+                    <div><p class="text-label">REV + CPA</p><h3 id="total" class="text-value">R$ 0,00</h3></div>
+                </div>
             </div>
+        </div>
 
-            <div class="card-stat">
-                <img src="icones/FTD-BkwOULkh.svg" class="h-12 w-12">
-                <div><div class="text-label">FTD</div><div id="ftd" class="text-value">0</div></div>
+        <div id="secao-perfil" class="hidden max-w-4xl mx-auto">
+            <div class="profile-card text-center relative">
+                <div class="h-32 w-32 bg-slate-700 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold border-4 border-slate-600 relative">
+                    N- <div class="absolute bottom-1 right-1 h-6 w-6 bg-green-500 rounded-full border-4 border-[#1e293b] flex items-center justify-center text-[10px]">✔</div>
+                </div>
+                <h2 class="text-2xl font-bold mb-4 uppercase tracking-tight">NEX AGENCY - <span id="perfil-nome-grande">...</span></h2>
+                <button class="bg-slate-900 border border-slate-700 px-6 py-2 rounded-lg text-xs font-semibold hover:bg-slate-800 transition">🛡 Alterar Senha</button>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12 text-left">
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
+                        <div class="p-2 bg-slate-700 rounded-lg">👤</div>
+                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">Nome</p><p class="font-bold">NEX AGENCY -</p></div>
+                    </div>
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
+                        <div class="p-2 bg-slate-700 rounded-lg">👤</div>
+                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">Sobrenome</p><p id="perfil-sobrenome" class="font-bold">...</p></div>
+                    </div>
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
+                        <div class="p-2 bg-slate-700 rounded-lg">🛡</div>
+                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">Cargo</p><p class="font-bold text-green-400">Afiliado</p></div>
+                    </div>
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 flex items-center gap-4">
+                        <div class="p-2 bg-slate-700 rounded-lg">✉</div>
+                        <div><p class="text-slate-500 text-[10px] font-bold uppercase">E-mail</p><p id="perfil-email" class="font-bold text-slate-300">...</p></div>
+                    </div>
+                </div>
             </div>
-
-            <div class="card-stat">
-                <img src="icones/FTD-BkwOULkh.svg" class="h-12 w-12">
-                <div><div class="text-label">QFTD</div><div id="qftd" class="text-value">0</div></div>
-            </div>
-
-            <div class="card-stat">
-                <img src="icones/deposito-BqL6OVL2.svg" class="h-12 w-12">
-                <div><div class="text-label">Depósito</div><div id="depositos" class="text-value">R$ 0,00</div></div>
-            </div>
-
-            <div class="card-stat">
-                <img src="icones/Rev-Cd_d35Vr.svg" class="h-12 w-12">
-                <div><div class="text-label">REV</div><div class="text-value">R$ 0,00</div></div>
-            </div>
-
-            <div class="card-stat highlight-blue">
-                <img src="icones/valor-D6_MFIlE.svg" class="h-12 w-12">
-                <div><div class="text-label text-blue-400">CPA</div><div id="cpa" class="text-value">R$ 0,00</div></div>
-            </div>
-
-            <div class="card-stat">
-                <img src="icones/Liquido Total2-BCbklALr.svg" class="h-12 w-12">
-                <div><div class="text-label">REV + CPA</div><div id="total" class="text-value">R$ 0,00</div></div>
-            </div>
-
         </div>
     </main>
 
     <script>
-        // CONFIGURAÇÃO DO SEU FIREBASE
+        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyC0oiw7obzsGDBvDr_enJQ1eNHmgPkwNA8",
             authDomain: "nexagency-84caa.firebaseapp.com",
@@ -103,13 +132,43 @@
             appId: "1:691404707224:web:8fed7daf6b4c7c9f8347ed"
         };
         firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         const user = localStorage.getItem('usuarioLogado');
         if(!user) window.location.href = 'index.html';
-        document.getElementById('userName').innerText = user;
 
-        firebase.database().ref('usuarios/' + user).on('value', (snapshot) => {
-            const d = snapshot.val();
+        document.getElementById('top-user-name').innerText = user;
+        document.getElementById('perfil-nome-grande').innerText = user;
+        document.getElementById('perfil-sobrenome').innerText = user.toUpperCase();
+        document.getElementById('perfil-email').innerText = user.toLowerCase() + "@nexagency.com";
+
+        // Navegação de Tabs
+        function mudarTab(tab) {
+            const overview = document.getElementById('secao-overview');
+            const perfil = document.getElementById('secao-perfil');
+            const titulo = document.getElementById('titulo-pagina');
+            const btnO = document.getElementById('btn-overview');
+            const btnP = document.getElementById('btn-perfil');
+
+            if(tab === 'overview') {
+                overview.classList.remove('hidden'); perfil.classList.add('hidden');
+                titulo.innerText = "Overview";
+                btnO.className = "flex items-center w-full text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500";
+                btnP.className = "flex items-center w-full text-slate-400 hover:text-white p-3 rounded-lg transition";
+            } else {
+                overview.classList.add('hidden'); perfil.classList.remove('hidden');
+                titulo.innerText = "Meu Perfil";
+                btnP.className = "flex items-center w-full text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500";
+                btnO.className = "flex items-center w-full text-slate-400 hover:text-white p-3 rounded-lg transition";
+            }
+            document.getElementById('dropdown').classList.add('hidden');
+        }
+
+        function toggleDropdown() { document.getElementById('dropdown').classList.toggle('hidden'); }
+
+        // Dados em Tempo Real
+        db.ref('usuarios/' + user).on('value', (s) => {
+            const d = s.val();
             if(d) {
                 document.getElementById('ftd').innerText = d.ftd || 0;
                 document.getElementById('registros').innerText = d.registros || 0;
