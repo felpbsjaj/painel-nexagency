@@ -10,12 +10,10 @@
     <style>
         body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: white; margin: 0; }
         .sidebar { background-color: #1e293b; border-right: 1px solid #334155; min-height: 100vh; }
-        .card-stat { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; transition: 0.3s; }
-        .card-stat:hover { border-color: #3b82f6; }
-        .icon-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
-        .text-label { color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .text-value { font-size: 24px; font-weight: 800; margin-top: 4px; }
-        .highlight-green { color: #4ade80; }
+        .card-stat { background-color: #ffffff; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid #e2e8f0; }
+        .text-label { color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .text-value { color: #0f172a; font-size: 24px; font-weight: 800; margin-top: -4px; }
+        .highlight-blue { border: 2px solid #3b82f6 !important; }
     </style>
 </head>
 <body class="flex">
@@ -25,15 +23,15 @@
         <nav class="space-y-2">
             <div class="text-slate-500 text-[10px] font-bold mb-4 uppercase">Menu Principal</div>
             <a href="#" class="flex items-center text-blue-400 bg-slate-800/50 p-3 rounded-lg border-l-4 border-blue-500">
-                <span class="mr-3">📊</span> Overview
+                <span class="mr-3 text-lg">📊</span> Overview
             </a>
             <button onclick="logout()" class="flex items-center text-slate-400 hover:text-white p-3 w-full text-left mt-20">
-                <span class="mr-3">↪️</span> Sair
+                <span class="mr-3 text-lg">↪️</span> Sair
             </button>
         </nav>
     </aside>
 
-    <main class="flex-1 p-8">
+    <main class="flex-1 p-8 bg-[#0f172a]">
         <header class="flex justify-between items-center mb-8">
             <div class="flex items-center gap-4">
                 <span class="text-slate-400">🏠</span>
@@ -41,72 +39,51 @@
             </div>
             <div class="flex items-center gap-3 bg-slate-800/30 p-2 px-4 rounded-full border border-slate-700">
                 <span id="userName" class="text-xs font-semibold">...</span>
-                <div class="h-8 w-8 bg-slate-700 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500">N-</div>
+                <div class="h-8 w-8 bg-slate-700 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500 text-white">N-</div>
             </div>
         </header>
 
-        <div class="flex gap-4 mb-8 text-[11px] text-slate-400">
-            <div class="bg-slate-800/50 px-3 py-1 rounded border border-slate-700">Filtros ativos:</div>
-            <div class="bg-slate-800/50 px-3 py-1 rounded border border-slate-700">Data início: 01/01/2026 ✕</div>
-            <div class="bg-slate-800/50 px-3 py-1 rounded border border-slate-700">Todas as casas ✕</div>
+        <div class="flex flex-wrap gap-2 mb-8 text-[11px] text-slate-400 uppercase font-bold">
+            <span class="bg-slate-800/50 px-3 py-1 rounded">Filtros ativos:</span>
+            <span class="bg-slate-800/50 px-3 py-1 rounded text-white">Limpar tudo ✕</span>
+            <span class="bg-slate-800/50 px-3 py-1 rounded text-white">Data início: 01/01/2026 ✕</span>
+            <span class="bg-slate-800/50 px-3 py-1 rounded text-white">Todas as casas ✕</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             
-            <div class="card-stat flex items-center gap-4">
-                <div class="icon-box"><img src="https://img.icons8.com/ios/50/4ade80/smartphone-tablet.png" class="h-10"></div>
-                <div>
-                    <div class="text-label">FTD</div>
-                    <div id="ftd" class="text-value">0</div>
-                </div>
+            <div class="card-stat">
+                <img src="ftd.png" class="h-12 w-12"> <div><div class="text-label">FTD</div><div id="ftd" class="text-value">0</div></div>
             </div>
 
-            <div class="card-stat flex items-center gap-4">
-                <div class="icon-box"><img src="https://img.icons8.com/ios/50/4ade80/add-user-male.png" class="h-10"></div>
-                <div>
-                    <div class="text-label">REGISTRO</div>
-                    <div id="registros" class="text-value">0</div>
-                </div>
+            <div class="card-stat">
+                <img src="registro.png" class="h-12 w-12">
+                <div><div class="text-label">REGISTRO</div><div id="registros" class="text-value">0</div></div>
             </div>
 
-            <div class="card-stat flex items-center gap-4">
-                <div class="icon-box"><img src="https://img.icons8.com/ios/50/4ade80/checked-user-male.png" class="h-10"></div>
-                <div>
-                    <div class="text-label">QFTD</div>
-                    <div id="qftd" class="text-value">0</div>
-                </div>
+            <div class="card-stat">
+                <img src="qftd.png" class="h-12 w-12">
+                <div><div class="text-label">QFTD</div><div id="qftd" class="text-value">0</div></div>
             </div>
 
-            <div class="card-stat flex items-center gap-4">
-                <div class="icon-box"><img src="https://img.icons8.com/ios/50/4ade80/bank.png" class="h-10"></div>
-                <div>
-                    <div class="text-label">DEPÓSITO</div>
-                    <div id="depositos" class="text-value highlight-green">R$ 0,00</div>
-                </div>
+            <div class="card-stat">
+                <img src="deposito.png" class="h-12 w-12">
+                <div><div class="text-label">Depósito</div><div id="depositos" class="text-value">R$ 0,00</div></div>
             </div>
 
-            <div class="card-stat flex items-center gap-4">
-                <div class="icon-box"><img src="https://img.icons8.com/ios/50/4ade80/combo-chart.png" class="h-10"></div>
-                <div>
-                    <div class="text-label">REV</div>
-                    <div class="text-value highlight-green">R$ 0,00</div>
-                </div>
+            <div class="card-stat">
+                <img src="rev.png" class="h-12 w-12">
+                <div><div class="text-label">REV</div><div class="text-value">R$ 0,00</div></div>
             </div>
 
-            <div class="card-stat flex items-center gap-4 border-blue-500 bg-slate-800/40">
-                <div class="icon-box"><img src="https://img.icons8.com/ios/50/3b82f6/money-bag-euro.png" class="h-10"></div>
-                <div>
-                    <div class="text-label text-blue-400">CPA</div>
-                    <div id="cpa" class="text-value highlight-green">R$ 0,00</div>
-                </div>
+            <div class="card-stat highlight-blue">
+                <img src="cpa.png" class="h-12 w-12">
+                <div><div class="text-label text-blue-600">CPA</div><div id="cpa" class="text-value">R$ 0,00</div></div>
             </div>
 
-            <div class="card-stat flex items-center gap-4">
-                <div class="icon-box"><img src="https://img.icons8.com/ios/50/4ade80/stack-of-money.png" class="h-10"></div>
-                <div>
-                    <div class="text-label">REV + CPA</div>
-                    <div id="total" class="text-value highlight-green">R$ 0,00</div>
-                </div>
+            <div class="card-stat">
+                <img src="rev_cpa.png" class="h-12 w-12">
+                <div><div class="text-label">REV + TOTAL</div><div id="total" class="text-value">R$ 0,00</div></div>
             </div>
 
         </div>
@@ -136,7 +113,7 @@
                 document.getElementById('qftd').innerText = d.qftd || 0;
                 document.getElementById('depositos').innerText = "R$ " + parseFloat(d.depositos || 0).toLocaleString('pt-BR');
                 document.getElementById('cpa').innerText = "R$ " + parseFloat(d.saldo || 0).toLocaleString('pt-BR');
-                document.getElementById('total').innerText = "R$ " + parseFloat(d.saldo || 0).toLocaleString('pt-BR');
+                document.getElementById('total').innerText = "R$ " + (parseFloat(d.saldo || 0) + parseFloat(d.rev || 0)).toLocaleString('pt-BR');
             }
         });
 
