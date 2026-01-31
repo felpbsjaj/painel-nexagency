@@ -2,152 +2,94 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexAgency - Admin Privado</title>
-    <script>
-        const senhaMestre = "thaimorrowland2026";
-        let acesso = prompt("Digite a senha de administrador:");
-        if (acesso !== senhaMestre) {
-            alert("Acesso negado!");
-            window.location.href = "index.html"; // Manda de volta pro login
-            document.body.innerHTML = ""; 
-        }
-    </script>
+    <title>NexAgency - Admin Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: white; }
-        .card-custom { background-color: #1e293b; border: 1px solid #334155; }
+        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .tab-btn { padding: 12px 24px; border-bottom: 2px solid transparent; transition: 0.3s; color: #94a3b8; }
+        .tab-btn.active { border-color: #3b82f6; color: #3b82f6; background-color: #1e293b; }
+        input, select { background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 8px; width: 100%; color: white; margin-bottom: 15px; outline: none; }
+        input:focus { border-color: #3b82f6; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-10">
+    <script>
+        // Proteção por senha conforme solicitado anteriormente
+        const senhaMestre = "thaimorrowland2026";
+        if (prompt("Senha de Admin:") !== senhaMestre) { window.location.href = "index.html"; }
+    </script>
 
-    <div class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-10">
-            <img src="https://res.cloudinary.com/dsreg6hmo/image/upload/v1767891428/BetBoard/Photos/gpkghm2vdoohymfufbuw.png" class="h-10">
-            <div class="text-right">
-                <h1 class="text-blue-500 font-bold text-xl tracking-tighter">CONTROLE RESTRITO</h1>
-                <p class="text-slate-400 text-xs uppercase">Marketing Superbet</p>
-            </div>
-        </header>
+    <div class="max-w-4xl mx-auto">
+        <div class="flex border-b border-slate-700 mb-10">
+            <button onclick="mudarAdminTab('criar')" id="tab-c" class="tab-btn active font-bold">➕ Criar Logins</button>
+            <button onclick="mudarAdminTab('lancar')" id="tab-l" class="tab-btn font-bold">📝 Lançar Valores</button>
+        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="card-custom p-6 rounded-2xl h-fit">
-                <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
-                    <span class="text-green-500">●</span> Gerenciar Influenciador
-                </h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-slate-400 text-xs font-bold mb-1">USUÁRIO (LOGIN)</label>
-                        <input type="text" id="user" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-slate-400 text-xs font-bold mb-1">SENHA</label>
-                        <input type="text" id="pass" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:border-blue-500 outline-none transition">
-                    </div>
-                    <hr class="border-slate-700 my-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-slate-400 text-xs font-bold mb-1">REGISTROS</label>
-                            <input type="number" id="registros" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white outline-none" value="0">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 text-xs font-bold mb-1">DEPÓSITOS (R$)</label>
-                            <input type="number" id="depositos" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white outline-none" value="0">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-blue-400 text-xs font-bold mb-1">CPA / SALDO (R$)</label>
-                        <input type="number" id="balance" class="w-full bg-slate-900 border border-blue-900 rounded-lg p-3 text-white outline-none">
-                    </div>
-                    
-                    <button onclick="salvarInfluenciador()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition shadow-lg">
-                        ATUALIZAR PAINEL
-                    </button>
-                </div>
-            </div>
+        <div id="box-criar" class="bg-slate-800/20 p-8 rounded-2xl border border-slate-700">
+            <h2 class="text-xl font-bold mb-6">Cadastrar Novo Influenciador</h2>
+            <input type="text" id="new-user" placeholder="Nome de Usuário (Login)">
+            <input type="password" id="new-pass" placeholder="Senha de Acesso">
+            <button onclick="criarUsuario()" class="w-full bg-blue-600 hover:bg-blue-500 p-4 rounded-xl font-bold transition">CRIAR CONTA</button>
+        </div>
 
-            <div class="lg:col-span-2 card-custom p-6 rounded-2xl">
-                <h2 class="text-lg font-semibold mb-6">Influenciadores Ativos</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="text-slate-500 text-xs uppercase border-b border-slate-700">
-                                <th class="pb-4 px-2">User</th>
-                                <th class="pb-4 px-2 text-center">Registros</th>
-                                <th class="pb-4 px-2 text-center text-slate-400">Depósitos</th>
-                                <th class="pb-4 px-2">CPA (Saldo)</th>
-                                <th class="pb-4 px-2 text-right">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaUsuarios" class="divide-y divide-slate-800"></tbody>
-                    </table>
-                </div>
+        <div id="box-lancar" class="hidden bg-slate-800/20 p-8 rounded-2xl border border-slate-700">
+            <h2 class="text-xl font-bold mb-6">Atualizar Painel do Influencer</h2>
+            <select id="select-user" onchange="puxarDadosUser()">
+                <option value="">Selecione o Influencer...</option>
+            </select>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="text-xs text-slate-500 font-bold">REGISTROS</label><input type="number" id="edit-reg"></div>
+                <div><label class="text-xs text-slate-500 font-bold">FTD</label><input type="number" id="edit-ftd"></div>
+                <div><label class="text-xs text-slate-500 font-bold">DEPÓSITOS (R$)</label><input type="number" id="edit-dep"></div>
+                <div><label class="text-xs text-slate-500 font-bold">CPA / SALDO (R$)</label><input type="number" id="edit-cpa"></div>
+                <div><label class="text-xs text-slate-500 font-bold">DATA INÍCIO</label><input type="text" id="edit-data-ini"></div>
+                <div><label class="text-xs text-slate-500 font-bold">DATA FIM</label><input type="text" id="edit-data-fim"></div>
             </div>
+            <button onclick="salvarAlteracoes()" class="w-full bg-green-600 hover:bg-green-500 p-4 rounded-xl font-bold transition mt-4 uppercase">Lançar Valores Agora</button>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC0oiw7obzsGDBvDr_enJQ1eNHmgPkwNA8",
-            authDomain: "nexagency-84caa.firebaseapp.com",
-            databaseURL: "https://nexagency-84caa-default-rtdb.firebaseio.com",
-            projectId: "nexagency-84caa",
-            storageBucket: "nexagency-84caa.firebasestorage.app",
-            messagingSenderId: "691404707224",
-            appId: "1:691404707224:web:8fed7daf6b4c7c9f8347ed"
-        };
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp({ /* Use sua config aqui */ });
         const db = firebase.database();
 
-        function salvarInfluenciador() {
-            const user = document.getElementById('user').value.trim();
-            const pass = document.getElementById('pass').value;
-            const balance = document.getElementById('balance').value || 0;
-            const reg = document.getElementById('registros').value || 0;
-            const dep = document.getElementById('depositos').value || 0;
+        function mudarAdminTab(tab) {
+            document.getElementById('box-criar').classList.toggle('hidden', tab !== 'criar');
+            document.getElementById('box-lancar').classList.toggle('hidden', tab !== 'lancar');
+            document.getElementById('tab-c').classList.toggle('active', tab === 'criar');
+            document.getElementById('tab-l').classList.toggle('active', tab === 'lancar');
+            if(tab === 'lancar') atualizarLista();
+        }
 
-            if (!user || !pass) return alert("Usuário e Senha são obrigatórios!");
-
-            db.ref('usuarios/' + user).set({
-                senha: pass,
-                saldo: balance,
-                registros: reg,
-                depositos: dep
-            }).then(() => {
-                alert("Painel de " + user + " atualizado com sucesso!");
-                document.getElementById('user').value = "";
-                document.getElementById('pass').value = "";
+        function atualizarLista() {
+            db.ref('usuarios').once('value', s => {
+                const sel = document.getElementById('select-user');
+                sel.innerHTML = '<option value="">Selecione o Influencer...</option>';
+                s.forEach(u => sel.innerHTML += `<option value="${u.key}">${u.key}</option>`);
             });
         }
 
-        db.ref('usuarios').on('value', (snapshot) => {
-            const tabela = document.getElementById('tabelaUsuarios');
-            tabela.innerHTML = "";
-            const dados = snapshot.val();
-            if (dados) {
-                Object.keys(dados).forEach(key => {
-                    const item = dados[key];
-                    tabela.innerHTML += `
-                        <tr class="hover:bg-slate-800/50 transition">
-                            <td class="py-4 px-2 font-semibold text-blue-400">${key}</td>
-                            <td class="py-4 px-2 text-center font-bold">${item.registros || 0}</td>
-                            <td class="py-4 px-2 text-center text-slate-400">R$ ${parseFloat(item.depositos || 0).toLocaleString('pt-BR')}</td>
-                            <td class="py-4 px-2 font-bold text-green-400">R$ ${parseFloat(item.saldo || 0).toLocaleString('pt-BR')}</td>
-                            <td class="py-4 px-2 text-right">
-                                <button onclick="deletar('${key}')" class="text-red-500 hover:bg-red-500/10 p-2 rounded">🗑️</button>
-                            </td>
-                        </tr>`;
-                });
-            }
-        });
+        function criarUsuario() {
+            const u = document.getElementById('new-user').value;
+            const p = document.getElementById('new-pass').value;
+            if(!u || !p) return alert("Preencha tudo!");
+            db.ref('usuarios/' + u).set({ senha: p, saldo: 0, ftd: 0, registros: 0, dataInicio: "01/01/2026", dataFim: "31/01/2026" })
+            .then(() => alert("Usuário criado!"));
+        }
 
-        function deletar(nome) {
-            if (confirm("Remover acesso de " + nome + "?")) {
-                db.ref('usuarios/' + nome).remove();
-            }
+        function salvarAlteracoes() {
+            const u = document.getElementById('select-user').value;
+            db.ref('usuarios/' + u).update({
+                registros: document.getElementById('edit-reg').value,
+                ftd: document.getElementById('edit-ftd').value,
+                depositos: document.getElementById('edit-dep').value,
+                saldo: document.getElementById('edit-cpa').value,
+                dataInicio: document.getElementById('edit-data-ini').value,
+                dataFim: document.getElementById('edit-data-fim').value
+            }).then(() => alert("Valores lançados com sucesso!"));
         }
     </script>
 </body>
