@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexAgency - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-custom { background-color: #0f111a; }
+        .card-custom { background-color: #161926; border: 1px solid #2d3142; }
+    </style>
+</head>
+<body class="bg-custom flex items-center justify-center min-h-screen p-4">
+
+    <div class="card-custom w-full max-w-md p-8 rounded-2xl shadow-2xl">
+        <div class="flex flex-col items-center mb-8">
+            <img src="https://res.cloudinary.com/dsreg6hmo/image/upload/v1767891428/BetBoard/Photos/gpkghm2vdoohymfufbuw.png" 
+                 alt="Nex Agency Logo" 
+                 class="h-16 w-auto mb-4">
+            <p class="text-gray-400 text-sm">Acesse sua conta para gerenciar seus resultados</p>
+        </div>
+
+        <form action="#" method="POST" class="space-y-6">
+            <div>
+                <label class="block text-gray-300 text-sm font-medium mb-2">Usuário ou E-mail</label>
+                <input type="text" 
+                    class="w-full bg-[#1c2030] border border-[#2d3142] text-white rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-all placeholder-gray-600"
+                    placeholder="Seu usuário">
+            </div>
+
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="text-gray-300 text-sm font-medium">Senha</label>
+                    <a href="#" class="text-blue-500 text-xs hover:underline">Esqueceu a senha?</a>
+                </div>
+                <input type="password" 
+                    class="w-full bg-[#1c2030] border border-[#2d3142] text-white rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-all placeholder-gray-600"
+                    placeholder="••••••••">
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg shadow-blue-900/20">
+                Entrar no Painel
+            </button>
+        </form>
+
+        <div class="mt-8 text-center border-t border-[#2d3142] pt-6">
+            <p class="text-gray-500 text-xs">
+                &copy; 2026 NexAgency. Sistema de Afiliados.
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
